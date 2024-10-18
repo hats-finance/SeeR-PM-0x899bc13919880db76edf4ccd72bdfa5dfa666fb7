@@ -83,9 +83,9 @@ You can look at [the frontend](https://seer-pm.netlify.app/) too.
 ## Medium severity issues
 
 
-- **Potential Denial of Service via Token Redemption Front-Running Exploit**
+- **Potential Token Redemption Denial of Service via Front-Running Attack Fix Needed**
 
-  An exploitable vulnerability exists in a token redemption process that could lead to Denial of Service (DOS) and Gas Griefing attacks. Attackers can disrupt a user's attempt to redeem tokens by inserting a small amount of tokens into the user's balance, causing redemption transactions to fail and waste gas. The issue stems from a process where the contract iterates over outcomeIndexes to calculate and transfer token balances, without accounting for potential manipulation of these balances. This could particularly affect smart contracts and wallets integrating with platforms that perform exact token approvals, thus rendering them unusable. The suggested solution involves modifying the redemption function to accept exact token amounts, preventing recalculation and potential manipulation on-chain. The exploit could lead to substantial operational disruption, although it was previously considered medium severity due to the perception of users being able to circumvent it by approving a higher token amount.
+  An issue has been identified in the token redemption process that allows attackers to exploit a vulnerability via a Denial of Service (DOS) or Gas Griefing attack. During the redemption process, when the contract calculates the token balance over various outcomeIndexes, attackers can manipulate the transaction by front-running it, sending a minimal token amount to alter the user's balance. This manipulation can cause the transaction to revert, leading to wasted gas fees and preventing token redemption. The suggested fix involves altering the redemption function to accept the exact amount of tokens, eliminating on-chain balance calculations. This vulnerability has significant implications for smart contracts and wallets interacting with the system, potentially leading to unusability without extensive user awareness. The problem has been addressed by adjusting the protocol to specify token amounts required for redemption.
 
 
   **Link**: [Issue #82](https://github.com/hats-finance/SeeR-PM-0x899bc13919880db76edf4ccd72bdfa5dfa666fb7/issues/82)
@@ -93,9 +93,9 @@ You can look at [the frontend](https://seer-pm.netlify.app/) too.
 ## Low severity issues
 
 
-- **ERC20 Non-Compliance Causes Token Transfer Failures in `Router` Contract**
+- **Router Contract Vulnerability: Transfer Failures for Non-Standard ERC20 Tokens**
 
-  The `Router` contract's functions `mergePositions()` and `redeemPositions()` utilize `transfer` and `transferFrom()` to move `collateralToken`. These will fail for non-reverting tokens that return false on transfer failure, like the EURS stablecoin. The recommended solution is implementing OpenZeppelin's `SafeERC20` to handle such token transaction issues properly, ensuring user's funds are not inadvertently lost.
+  The `Router` contract functions, such as `mergePositions()` and `redeemPositions()`, may fail with certain ERC20 tokens that return false instead of reverting on a failed transfer. These operations could leave user funds stuck if return values aren't checked. This can be mitigated using OpenZeppelin's SafeERC20, which handles such edge cases.
 
 
   **Link**: [Issue #103](https://github.com/hats-finance/SeeR-PM-0x899bc13919880db76edf4ccd72bdfa5dfa666fb7/issues/103)
@@ -104,7 +104,11 @@ You can look at [the frontend](https://seer-pm.netlify.app/) too.
 
 ## Conclusion
 
-The Hats.finance audit competition for SeeR-PM showcased a decentralized and proactive approach to securing web3 projects through competitive auditing. This model leverages the expertise of numerous skilled auditors, encouraging them to identify vulnerabilities prior to project launches. The competition, characterized by its time-based and results-driven nature, only rewards successful auditors, efficiently managing its budget by paying only for identified issues and retaining funds if none are found. The audit of SeeR-PM involved a thorough examination of various smart contracts but resulted in identifying only a few issues: a medium-severity denial of service vulnerability related to token redemption, and a low-severity issue concerning ERC20 token compliance affecting the Router contract. These findings reflect the competition's commitment to maintaining rigorous security standards while promoting decentralized, high-quality security assessments, effectively reducing costs and setting a new benchmark for web3 project security.
+The SeeR-PM Audit Competition, hosted by Hats.finance, concluded with a comprehensive review of Seer's prediction market contracts. The eight-day public audit competition engaged a vast pool of skilled auditors and revolved around securing smart contracts efficiently. SeeR-PM is a next-generation prediction market platform, and the audit scope included key contracts such as GnosisRouter, Market, MarketFactory, and RealityProxy.
+
+The competition resulted in the identification of significant issues, such as potential denial-of-service vulnerabilities within token redemption processes and transfer failures with non-standard ERC20 tokens. These findings highlighted vulnerabilities that could have severe impacts on smart contract usability and security. The recommended fix for the DoS vulnerability involved adjusting redemption functions to require exact token amounts, eliminating on-chain balance ambiguities.
+
+Overall, the competition showcased the effectiveness of decentralized, results-driven audit approaches in improving Web3 security infrastructures, reinforcing Hats.finance's commitment to robust and economical security solutions in the DeFi space. The competition awarded $13,743.35 to two participants, emphasizing the efficiency of budget allocation by rewarding only for identified vulnerabilities.
 
 ## Disclaimer
 
